@@ -1,0 +1,40 @@
+# Maven: artefactos de compilacion y empaquetado
+target/
+*.class
+*.war
+*.jar
+
+# Eclipse / Spring Tool Suite
+.metadata/
+.settings/
+.classpath
+.project
+.factorypath
+bin/
+
+# Servidores y configuracion local de Eclipse
+Servers/
+.recommenders/
+
+# Registros y archivos temporales
+*.log
+*.tmp
+*.temp
+*.bak
+*~
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Documento academico local
+documentacion/INFORME FINAL DE PROYECTO_MINIMARKET EARHT.docx
+
+# Configuracion local y secretos
+.env
+.env.*
+!env.example
+application-local.properties
+application-secret.properties
+db.properties

@@ -1,0 +1,170 @@
+-- BASE DE DATOS MINIMARKEARTH
+
+
+-- USUARIO cliente: ares
+-- CONTRASEÑA: 10001
+
+-- USUARIO admin: eros
+-- CONTRASEÑA:10000
+
+DROP DATABASE IF EXISTS tiendaearth;
+CREATE DATABASE tiendaearth3;
+-- activamos la bd
+
+USE tiendaearth3;
+create table tb_tipos(
+idtipo int not null primary key,
+descripcion varchar(15)
+);
+
+create table tb_estados(
+idestado    int not null primary key,
+descripcion varchar(15)
+);
+ 
+CREATE TABLE tb_usuarios(
+codigo  int auto_increment,
+nombre varchar(15),
+apellido varchar(25),
+usuario varchar (25),
+correo  char(45) NOT NULL,
+clave    char(5),
+fnacim  date  null,
+celular varchar(9),
+tipo    int DEFAULT 2,
+estado  int DEFAULT 1,
+primary key (codigo),
+foreign key (tipo) references tb_tipos(idtipo),
+foreign key (estado) references tb_estados(idestado)
+);
+        
+create table tb_categorias(
+idcategoria	int not null primary key,
+descripcion varchar(45)
+);
+
+create table tb_productos(
+idprod char(5) not null,
+descripcion varchar(45),
+stock int,
+precio decimal(8,2),
+idcategoria int,
+estado int,
+primary key (idprod), 
+foreign key (idcategoria) references tb_categorias(idcategoria)
+);
+
+create table tb_cab_boleta(
+num_bol      char(5) not null,
+fch_bol    date,
+cod_cliente  int not null,
+primary key (num_bol),
+foreign key (cod_cliente) references tb_usuarios(codigo)
+);
+
+create table tb_det_boleta(
+num_bol     char(5) not null,
+idprod      char(5) not null,
+cantidad    int,
+preciovta   decimal(8,2),
+primary key (num_bol,idprod),
+foreign key (num_bol) references tb_cab_boleta(num_bol),
+foreign key (idprod) references tb_productos(idprod)
+);
+
+-- inserts
+insert into tb_tipos values (1, 'administrativo');
+insert into tb_tipos values (2, 'cliente');
+
+insert into tb_estados values (1, 'activo');
+insert into tb_estados values (2, 'eliminado');
+insert into tb_estados values (3, 'suspendido');
+
+insert into tb_usuarios values (null,'Ronald', 'Enciso','eros', 'eros@gmail.com', '10000', curdate(),'963258741',1,1);
+insert into tb_usuarios values (null,'Luis', 'Perez','ares', 'ares@gmail.com', '10001', curdate(),'963258741',2,1);
+
+insert into tb_categorias values (1, 'Abarrotes');
+insert into tb_categorias values (2, 'Bebidas');
+insert into tb_categorias values (3, 'Licores');
+insert into tb_categorias values (4, 'Limpieza');
+
+insert into tb_productos values ('P0001','Arroz Costeño 1kg',50,9.80,1,1);
+insert into tb_productos values ('P0002','Ajinomen de pollo 80gr',100,2.0,1,1);
+insert into tb_productos values ('P0003','Mayonesa Alpesa caja 4kg',10,24.80,1,1);
+insert into tb_productos values ('P0004','Don Vitorio Cabbelo de angel',120,1.7,1,1);
+insert into tb_productos values ('P0005','Atun florida ',120,5.4,1,1);
+insert into tb_productos values ('P0006','Coca Cola normal 3L',80,11.8,2,1);
+insert into tb_productos values ('P0007','Crush naranja 3L',40,7.5,2,1);
+insert into tb_productos values ('P0008','Gloria jugo durazno 1L',55,4.3,2,1);
+insert into tb_productos values ('P0009','Inca Kola normal 3L',60,11.80,2,1);
+insert into tb_productos values ('P0010','Yourt Gloria fresa 900gr',10,6.5,2,1);
+insert into tb_productos values ('P0011','Vino Tacama',10,29.9,3,1);
+insert into tb_productos values ('P0012','Vino tabernero',40,22.7,3,1);
+insert into tb_productos values ('P0013','Santiago queirolo',10,36.0,3,1);
+insert into tb_productos values ('P0014','Whisky Jhonnie Walker Red',10,49.9,3,1);
+insert into tb_productos values ('P0015','Whisky Something special',50,65.0,3,1);
+insert into tb_productos values ('P0016','Pinesol 900ml',10,10.5,4,1);
+insert into tb_productos values ('P0017','Legia Cloro 2L',23,18.9,4,1);
+insert into tb_productos values ('P0018','Jabon liquido Manzana',10,5.8,4,1);
+insert into tb_productos values ('P0019','Poett Lavanda 900ml',10,3.8,4,1);
+insert into tb_productos values ('P0021','Sapolio Spray Forte',10,6.3,4,1);
+insert into tb_productos values ('P0022','Sapolio Spray Forte',10,6.3,4,1);
+insert into tb_productos values ('P0023','Sapolio Spray Forte',10,6.3,4,1);
+insert into tb_productos values ('P0024','Sapolio Spray Forte',10,6.3,4,1);
+insert into tb_productos values ('P0025','Sapolio Spray Forte',10,6.3,4,1);
+insert into tb_productos values ('P0026','Sapolio Spray Forte',10,6.3,4,1);
+
+-- consultas
+SELECT * FROM tb_usuarios;
+SELECT * FROM tb_productos;
+select * from tb_categorias;
+select * from tb_tipos;
+select * from tb_estados;
+select * from tb_cab_boleta;
+select * from tb_det_boleta;
+
+-- ejemplo de procedimientos almancenados de consulta
+DELIMiTER $$
+create procedure usp_validaAcceso (usr char(45), pas char(5))
+begin
+select * from tb_usuarios where usuario = usr and clave = pas;
+end$$
+DELIMiTER ;
+
+call usp_validaAcceso('U001@gmail.com','10001');
+
+select p.idprod, p.descripcion, p.stock, p.precio, c.descripcion as 'categoria', e.descripcion as 'estado' from tb_productos p 
+join tb_categorias c on
+p.idcategoria = c.idcategoria
+join tb_estados e on
+p.estado = e.idestado;
+
+select p.codigo, p.nombre, p.apellido, p.usuario, p.correo, p.clave, p.fnacim, p.celular, c.descripcion as 'tipo', e.descripcion as 'estado' from tb_usuarios p 
+join tb_tipos c on
+p.tipo = c.idtipo
+join tb_estados e on
+p.estado = e.idestado;
+
+create procedure sp_vista_usu_tip ()
+select p.codigo, p.nombre, p.apellido, p.usuario, p.correo, p.clave, p.fnacim, p.celular, c.descripcion as 'tipo', e.descripcion as 'estado' from tb_usuarios p 
+join tb_tipos c on
+p.tipo = c.idtipo
+join tb_estados e on
+p.estado = e.idestado;
+
+call sp_vista_usu_tip
+
+-- drop procedure sp_vista_usu_tip
+
+-- como solo es una sentencia se puede quitar el begin y el end el. AS  no se pone en mysql
+create procedure sp_vista_prod_cat3()
+select p.idprod, p.descripcion, p.stock, p.precio, c.descripcion as 'categoria', e.descripcion as 'estado' from tb_productos p 
+join tb_categorias c on
+p.idcategoria = c.idcategoria
+JOIN tb_estados e 
+    on p.estado = e.idestado;
+
+-- EN MYSQL SE LLAMA UN Procedimiento almacenado con call
+call sp_vista_prod_cat3
+
+
