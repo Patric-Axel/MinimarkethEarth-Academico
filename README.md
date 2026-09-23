@@ -52,15 +52,6 @@ pom.xml              Dependencias y configuracion Maven
 
    El contexto puede cambiar segun la configuracion de Tomcat. La raiz de la aplicacion redirige al login.
 
-## Base de datos
-
-El script crea la base `tiendaearth3`, sus tablas, datos iniciales y los procedimientos usados por los listados administrativos:
-
-- `sp_vista_usu_tip`
-- `sp_vista_prod_cat3`
-
-> Para publicar el proyecto, se recomienda no subir credenciales reales. Usa valores locales o variables de entorno en la configuracion de conexion.
-
 ## Rutas principales
 
 | Ruta | Descripcion |
