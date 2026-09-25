@@ -67,3 +67,7 @@ pom.xml              Dependencias y configuracion Maven
 
 Este proyecto fue desarrollado con fines formativos. Su objetivo es demostrar el uso de Java web tradicional, arquitectura por capas basica (Servlet - DAO - MySQL), manejo de sesion y navegacion entre vistas JSP.
 
+## Video de Ejecución
+ 
+ https://youtu.be/MlaJaFk2pY4
+
